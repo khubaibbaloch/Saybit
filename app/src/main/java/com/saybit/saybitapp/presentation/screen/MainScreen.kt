@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import com.saybit.saybitapp.R
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.rotate
+import com.saybit.saybitapp.presentation.components.DrawerItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -91,6 +92,7 @@ fun MainScreen() {
                         contentScale = ContentScale.Fit
                     )
                     Spacer(modifier = Modifier.padding(top = 8.dp))
+
                     Text(
                         text = "Khubaib Aziz Khan",
                         color = Color.White,
@@ -131,92 +133,47 @@ fun MainScreen() {
                         .weight(1f)
                         .verticalScroll(scrollState)
                 ) {
-                    NavigationDrawerItem(
-                        label = { Text(text = "Profile") },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.profile),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        selected = false,
-                        onClick = { /*TODO*/ }
-                    )
-                    NavigationDrawerItem(
-                        label = { Text(text = "Premium") },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.premium),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        selected = false,
-                        onClick = { /*TODO*/ }
-                    )
-                    NavigationDrawerItem(
-                        label = { Text(text = "Bookmark") },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.bookmark),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        selected = false,
-                        onClick = { /*TODO*/ }
-                    )
-                    NavigationDrawerItem(
-                        label = { Text(text = "Jobs") },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.jobs),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        selected = false,
-                        onClick = { /*TODO*/ }
-                    )
-                    NavigationDrawerItem(
-                        label = { Text(text = "Lists") },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.lists),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        selected = false,
-                        onClick = { /*TODO*/ }
-                    )
-                    NavigationDrawerItem(
-                        label = { Text(text = "Spaces") },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.spaces),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        selected = false,
-                        onClick = { /*TODO*/ }
-                    )
-                    NavigationDrawerItem(
-                        label = { Text(text = "Monetization") },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.monetization),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        selected = false,
-                        onClick = { /*TODO*/ }
-                    )
+                    DrawerItem(
+                        label = "Profile",
+                        icon = painterResource(R.drawable.profile),
+                        iconSize = 20.dp,
+                        onClick = {})
+                    DrawerItem(
+                        label = "Premium",
+                        icon = painterResource(R.drawable.premium),
+                        iconSize = 20.dp,
+                        onClick = {})
+                    DrawerItem(
+                        label = "Bookmark",
+                        icon = painterResource(R.drawable.bookmark),
+                        iconSize = 20.dp,
+                        onClick = {})
+                    DrawerItem(
+                        label = "Jobs",
+                        icon = painterResource(R.drawable.jobs),
+                        iconSize = 20.dp,
+                        onClick = {})
+                    DrawerItem(
+                        label = "Lists",
+                        icon = painterResource(R.drawable.lists),
+                        iconSize = 20.dp,
+                        onClick = {})
+                    DrawerItem(
+                        label = "Spaces",
+                        icon = painterResource(R.drawable.spaces),
+                        iconSize = 20.dp,
+                        onClick = {})
+                    DrawerItem(
+                        label = "Monetization",
+                        icon = painterResource(R.drawable.monetization),
+                        iconSize = 20.dp,
+                        onClick = {})
 
-                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp).padding(vertical = 32.dp))
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(vertical = 32.dp)
+                    )
 
                     NavigationDrawerItem(
                         label = { Text(text = "Setting & Support") },
@@ -230,46 +187,30 @@ fun MainScreen() {
                             )
                         },
                         selected = false,
-                        onClick = { showSupportSection = !showSupportSection
-                        scope.launch {
-                            delay(100)
-                            scrollState.animateScrollTo(scrollState.maxValue)
-                        }}
+                        onClick = {
+                            showSupportSection = !showSupportSection
+                            scope.launch {
+                                delay(100)
+                                scrollState.animateScrollTo(scrollState.maxValue)
+                            }
+                        }
                     )
                     AnimatedVisibility(
                         visible = showSupportSection,
                         enter = fadeIn(),
                         exit = shrinkVertically()
                     ) {
-                        Column {
-                            NavigationDrawerItem(
-                                label = { Text(text = "Settings") },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.settings),
-                                        contentDescription = "Settings",
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                },
-                                selected = false,
-                                onClick = { /* Handle Settings Click */ }
-                            )
-                            NavigationDrawerItem(
-                                label = { Text(text = "Help") },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.help),
-                                        contentDescription = "Help",
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                },
-                                selected = false,
-                                onClick = { /* Handle Help Click */ }
-                            )
-                        }
+                        DrawerItem(
+                            label = "Settings",
+                            icon = painterResource(R.drawable.settings),
+                            iconSize = 20.dp,
+                            onClick = {})
+                        DrawerItem(
+                            label = "Help",
+                            icon = painterResource(R.drawable.help),
+                            iconSize = 20.dp,
+                            onClick = {})
                     }
-
-
                 }
                 IconButton(onClick = {}) {
                     Icon(
