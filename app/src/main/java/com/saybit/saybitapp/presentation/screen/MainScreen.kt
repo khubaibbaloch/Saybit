@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -32,6 +36,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
@@ -57,7 +62,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saybit.saybitapp.R
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.rotate
+import com.saybit.saybitapp.presentation.components.CustomMainScreenTopBar
 import com.saybit.saybitapp.presentation.components.DrawerItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -73,12 +80,11 @@ fun MainScreen() {
         targetValue = if (showSupportSection) -180f else 0f
     )
     ModalNavigationDrawer(
-        drawerState = rememberDrawerState(DrawerValue.Open),
+        drawerState = drawerState,
         gesturesEnabled = true,
         drawerContent = {
             ModalDrawerSheet(
                 modifier = Modifier
-                    .padding(top = 8.dp, start = 16.dp)
                     .fillMaxWidth(0.9f),
                 drawerContainerColor = Color.Black,
             ) {
@@ -200,16 +206,19 @@ fun MainScreen() {
                         enter = fadeIn(),
                         exit = shrinkVertically()
                     ) {
-                        DrawerItem(
-                            label = "Settings",
-                            icon = painterResource(R.drawable.settings),
-                            iconSize = 20.dp,
-                            onClick = {})
-                        DrawerItem(
-                            label = "Help",
-                            icon = painterResource(R.drawable.help),
-                            iconSize = 20.dp,
-                            onClick = {})
+                        Column {
+                            DrawerItem(
+                                label = "Settings",
+                                icon = painterResource(R.drawable.settings),
+                                iconSize = 20.dp,
+                                onClick = {})
+                            DrawerItem(
+                                label = "Help",
+                                icon = painterResource(R.drawable.help),
+                                iconSize = 20.dp,
+                                onClick = {})
+                        }
+
                     }
                 }
                 IconButton(onClick = {}) {
@@ -226,9 +235,13 @@ fun MainScreen() {
     ) {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text("My App") }
-                )
+                CustomMainScreenTopBar(onProfileClick = {
+                    scope.launch {
+                        drawerState.apply {
+                            if (isClosed) open() else close()
+                        }
+                    }
+                })
             }
         ) { innerPadding ->
             Column(
