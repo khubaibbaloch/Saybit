@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.DrawerValue
@@ -39,10 +41,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -63,7 +69,9 @@ import androidx.compose.ui.unit.sp
 import com.saybit.saybitapp.R
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import com.saybit.saybitapp.presentation.components.CustomMainScreenTopBar
 import com.saybit.saybitapp.presentation.components.DrawerItem
 import kotlinx.coroutines.delay
@@ -242,11 +250,63 @@ fun MainScreen() {
                         }
                     }
                 })
+            },
+            bottomBar = {
+                var selectedIndex by remember { mutableStateOf(0) }
+
+                val filledIcons = listOf(
+                    R.drawable.icon_home_filled,
+                    R.drawable.icon_search_filled,
+                    R.drawable.icon_bell_filled,
+                    R.drawable.icon_user_filled,
+                    R.drawable.icon_mail_filled
+                )
+
+                val outlineIcons = listOf(
+                    R.drawable.icon_home_outline,
+                    R.drawable.icon_search_outline,
+                    R.drawable.icon_bell_outline,
+                    R.drawable.icon_user_outline,
+                    R.drawable.icon_mail_outline
+                )
+
+
+                NavigationBar(
+                    modifier = Modifier
+                        .height(55.dp)
+                        .drawBehind {
+                            drawLine(
+                                color = Color.White.copy(0.2f),
+                                start = Offset(0f, 0f),
+                                end = Offset(size.width, 0f),
+                                strokeWidth = 1.dp.toPx()
+                            )
+                        },
+                    containerColor = Color.Black,
+                ) {
+                    filledIcons.indices.forEach { index ->
+                        val iconRes =
+                            if (selectedIndex == index) filledIcons[index] else outlineIcons[index]
+
+                        NavigationBarItem(
+                            selected = selectedIndex == index,
+                            onClick = { selectedIndex = index },
+                            icon = {
+                                Icon(
+                                    painter = painterResource(iconRes),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            },
+                        )
+                    }
+                }
             }
         ) { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(innerPadding)
                     .background(Color.Black)
             ) {
                 Text("Custom Drawer")
