@@ -51,8 +51,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
+import androidx.navigation.compose.rememberNavController
 import com.saybit.saybitapp.presentation.components.CustomMainScreenTopBar
 import com.saybit.saybitapp.presentation.components.DrawerItem
+import com.saybit.saybitapp.presentation.navhost.RootNavHost
+import com.saybit.saybitapp.presentation.navhost.ScreenRoute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -66,6 +69,7 @@ fun MainScreen() {
     val rotateDownArrowIcon by animateFloatAsState(
         targetValue = if (showSupportSection) -180f else 0f
     )
+    val navController = rememberNavController()
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = true,
@@ -216,7 +220,7 @@ fun MainScreen() {
                     )
 
                 }
-                // ...other drawer items
+
             }
         }
     ) {
@@ -250,6 +254,14 @@ fun MainScreen() {
                     R.drawable.icon_user_outline,
                     R.drawable.icon_mail_outline
                 )
+                val screenList = listOf(
+                    ScreenRoute.HomeScreen.route,
+                    ScreenRoute.SearchScreen.route,
+                    ScreenRoute.AiScreen.route,
+                    ScreenRoute.CommunitiesScreen.route,
+                    ScreenRoute.NotificationScreen.route,
+                    ScreenRoute.InboxScreen.route
+                )
 
 
                 NavigationBar(
@@ -271,7 +283,16 @@ fun MainScreen() {
 
                         NavigationBarItem(
                             selected = selectedIndex == index,
-                            onClick = { selectedIndex = index },
+                            onClick = {
+                                selectedIndex = index
+                                navController.navigate(screenList[index]) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
                             icon = {
                                 Icon(
                                     painter = painterResource(iconRes),
@@ -290,6 +311,7 @@ fun MainScreen() {
                     .padding(innerPadding)
                     .background(Color.Black)
             ) {
+                RootNavHost(navController)
                 Text("Custom Drawer")
             }
         }
