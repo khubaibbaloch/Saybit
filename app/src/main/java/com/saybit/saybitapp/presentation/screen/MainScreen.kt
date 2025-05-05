@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -27,6 +29,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -51,6 +54,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.saybit.saybitapp.presentation.components.CustomMainScreenTopBar
 import com.saybit.saybitapp.presentation.components.DrawerItem
@@ -62,6 +66,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
+
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
@@ -70,6 +75,9 @@ fun MainScreen() {
         targetValue = if (showSupportSection) -180f else 0f
     )
     val navController = rememberNavController()
+    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+    val currentRoute = navBackStackEntry?.destination?.route
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = true,
@@ -226,13 +234,25 @@ fun MainScreen() {
     ) {
         Scaffold(
             topBar = {
-                CustomMainScreenTopBar(onProfileClick = {
-                    scope.launch {
-                        drawerState.apply {
-                            if (isClosed) open() else close()
+                when (currentRoute) {
+                    ScreenRoute.HomeScreen.route -> CustomMainScreenTopBar(onProfileClick = {
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
                         }
-                    }
-                })
+                    })
+
+                    ScreenRoute.SearchScreen.route -> CustomMainScreenTopBar(onProfileClick = {
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    })
+
+                    else -> null
+                }
             },
             bottomBar = {
                 var selectedIndex by remember { mutableStateOf(0) }
@@ -300,6 +320,7 @@ fun MainScreen() {
                                     modifier = Modifier.size(20.dp)
                                 )
                             },
+                            colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
                         )
                     }
                 }
@@ -309,10 +330,10 @@ fun MainScreen() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
+                    .navigationBarsPadding()
                     .background(Color.Black)
             ) {
                 RootNavHost(navController)
-                Text("Custom Drawer")
             }
         }
     }

@@ -9,17 +9,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.saybit.saybitapp.presentation.components.CustomMainScreenTopBar
+import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(){
-    Scaffold { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(Color.Black)
-        ) {
-            Text("Home Screen")
-        }
+fun HomeScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
+        Text("Home Screen")
     }
 }
