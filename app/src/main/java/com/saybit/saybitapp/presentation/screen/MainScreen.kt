@@ -1,15 +1,27 @@
 package com.saybit.saybitapp.presentation.screen
 
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +34,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,9 +65,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saybit.saybitapp.R
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.saybit.saybitapp.presentation.components.BottomAppBar
@@ -82,6 +99,7 @@ fun MainScreen() {
 
     val selectedIndex = remember { mutableStateOf(0) }
 
+    val isMainFabClicked = remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -122,6 +140,163 @@ fun MainScreen() {
                     selectedIndex = selectedIndex,
                     navController = navController
                 )
+            },
+            floatingActionButton = {
+                Row(
+                    modifier = Modifier
+                        .height(200.dp)
+                    // .background(Color.Red)
+
+                ) {
+
+                    if (isMainFabClicked.value){
+                        Column(
+                            modifier = Modifier.height(190.dp),
+                            verticalArrangement = Arrangement.SpaceAround,
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text("Go Live", color = Color.White)
+                            Text("Spaces", color = Color.White)
+                            Text("Photos", color = Color.White)
+                            Text("Post", color = Color.White)
+
+
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        BouncySmallFab(isClicked = isMainFabClicked.value, onClick = {})
+                        BouncySmallFab(isClicked = isMainFabClicked.value, onClick = {})
+                        BouncySmallFab(isClicked = isMainFabClicked.value, onClick = {})
+                        BouncyLargeFab(
+                            onClick = {
+                                isMainFabClicked.value = !isMainFabClicked.value
+                            },
+                            isIconChange = isMainFabClicked.value
+                        )
+//                        FloatingActionButton(
+//                            onClick = {},
+//                            shape = CircleShape,
+//                            containerColor = Color(0xFF1DA1F2),
+//                            modifier = Modifier.size(40.dp)
+//                        ) {
+//
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
+//                                contentDescription = "Add",
+//                                tint = Color.White,
+//                                modifier = Modifier.size(20.dp)
+//                            )
+//                        }
+//                        FloatingActionButton(
+//                            onClick = {},
+//                            shape = CircleShape,
+//                            containerColor = Color(0xFF1DA1F2),
+//                            modifier = Modifier.size(55.dp)
+//                        ) {
+//
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
+//                                contentDescription = "Add",
+//                                tint = Color.White,
+//                                modifier = Modifier.size(20.dp)
+//                            )
+//                        }
+
+
+                    }
+//                    Row() {
+//                        Text("Go Live", color = Color.White)
+//
+//                        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+//
+//                        FloatingActionButton(
+//                            onClick = {},
+//                            shape = CircleShape,
+//                            containerColor = Color(0xFF1DA1F2),
+//                            modifier = Modifier.size(40.dp)
+//                        ) {
+//
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
+//                                contentDescription = "Add",
+//                                tint = Color.White,
+//                                modifier = Modifier.size(20.dp)
+//                            )
+//                        }
+//
+//                    }
+//
+//                    Spacer(modifier = Modifier.padding(top = 16.dp))
+//                    Row {
+//                        Text("Go Live", color = Color.White)
+//
+//                        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+//
+//
+//                        FloatingActionButton(
+//                            onClick = {},
+//                            shape = CircleShape,
+//                            modifier = Modifier.size(40.dp),
+//                            containerColor = Color(0xFF1DA1F2)
+//                        ) {
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
+//                                contentDescription = "Add",
+//                                tint = Color.White,
+//                                modifier = Modifier.size(20.dp)
+//                            )
+//                        }
+//                    }
+//                    Spacer(modifier = Modifier.padding(top = 16.dp))
+//                    Row {
+//                        Text("Go Live", color = Color.White)
+//
+//                        Spacer(modifier = Modifier.padding(horizontal = 16.dp))
+//
+//
+//                        FloatingActionButton(
+//                            onClick = {},
+//                            shape = CircleShape,
+//                            modifier = Modifier.size(40.dp),
+//                            containerColor = Color(0xFF1DA1F2)
+//                        ) {
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
+//                                contentDescription = "Add",
+//                                tint = Color.White,
+//                                modifier = Modifier.size(20.dp)
+//                            )
+//                        }
+//                    }
+//                    Spacer(modifier = Modifier.padding(top = 16.dp))
+//                    Row {
+//                        Text("Go Live", color = Color.White)
+//
+//                        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+//
+//
+//                        FloatingActionButton(
+//                            onClick = {},
+//                            shape = CircleShape,
+//                            modifier = Modifier.size(55.dp),
+//                            containerColor = Color(0xFF1DA1F2)
+//                        ) {
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
+//                                contentDescription = "Add",
+//                                tint = Color.White,
+//                                modifier = Modifier.size(20.dp)
+//                            )
+//                        }
+//                    }
+                }
+
             }
         ) { innerPadding ->
             Column(
@@ -137,4 +312,110 @@ fun MainScreen() {
     }
 
 
+}
+
+@Composable
+fun BouncyLargeFab(onClick: () -> Unit, isIconChange: Boolean) {
+    val scale = remember { Animatable(1f) }
+    val icon =
+        if (isIconChange) painterResource(R.drawable.ic_wing) else painterResource(R.drawable.ic_add)
+    val scope = rememberCoroutineScope()
+
+    val rotateSpec = tween<Float>(
+        durationMillis = 200,
+        easing = LinearEasing
+    )
+
+    val animateWingIcon = animateFloatAsState(
+        targetValue = if (isIconChange) 30f else -50f,
+        animationSpec = rotateSpec
+    )
+
+    val animateAddIcon = animateFloatAsState(
+        targetValue = if (isIconChange) 90f else 0f,
+        animationSpec = rotateSpec
+    )
+
+    val animateIcon = if (isIconChange) animateWingIcon else animateAddIcon
+    FloatingActionButton(
+        onClick = {
+            scope.launch {
+                scale.animateTo(
+                    targetValue = 1.1f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMedium
+                    )
+                )
+                scale.animateTo(
+                    targetValue = 1f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMedium
+                    )
+                )
+            }
+            onClick()
+        },
+        shape = CircleShape,
+        containerColor = Color(0xFF1DA1F2),
+        modifier = Modifier
+            .graphicsLayer(
+                scaleX = scale.value,
+                scaleY = scale.value
+            )
+            .size(55.dp)
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = "Add",
+            tint = Color.White,
+            modifier = Modifier
+                .size(25.dp)
+                .graphicsLayer(
+                    scaleX = scale.value,
+                    scaleY = scale.value
+                )
+                .rotate(animateIcon.value)
+        )
+
+    }
+}
+
+@Composable
+fun BouncySmallFab(isClicked: Boolean, onClick: () -> Unit) {
+    val scale by animateFloatAsState(
+        targetValue = if (isClicked) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 100,
+            easing = EaseInOut
+        ), label = ""
+    )
+
+
+    FloatingActionButton(
+        onClick = { onClick() },
+        shape = CircleShape,
+        containerColor = Color(0xFF1DA1F2),
+        modifier = Modifier
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale,
+                transformOrigin = TransformOrigin(0.5f, 0.5f)
+            )
+            .size(40.dp)
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.dark),
+            contentDescription = "Add",
+            tint = Color.White,
+            modifier = Modifier
+                .size(20.dp)
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    transformOrigin = TransformOrigin(0.5f, 0.5f)
+                )
+        )
+    }
 }
