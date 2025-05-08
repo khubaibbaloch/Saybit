@@ -1,7 +1,9 @@
 package com.saybit.saybitapp.presentation.screen
 
 
+import android.graphics.drawable.Icon
 import android.util.Log
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseInOut
@@ -71,6 +73,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.saybit.saybitapp.presentation.components.BottomAppBar
@@ -79,6 +82,7 @@ import com.saybit.saybitapp.presentation.components.DrawerContentUi
 import com.saybit.saybitapp.presentation.components.DrawerItem
 import com.saybit.saybitapp.presentation.navhost.RootNavHost
 import com.saybit.saybitapp.presentation.navhost.ScreenRoute
+import com.saybit.saybitapp.ui.theme.AppPrimaryColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -149,7 +153,7 @@ fun MainScreen() {
 
                 ) {
 
-                    if (isMainFabClicked.value){
+                    if (isMainFabClicked.value) {
                         Column(
                             modifier = Modifier.height(190.dp),
                             verticalArrangement = Arrangement.SpaceAround,
@@ -170,9 +174,18 @@ fun MainScreen() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        BouncySmallFab(isClicked = isMainFabClicked.value, onClick = {})
-                        BouncySmallFab(isClicked = isMainFabClicked.value, onClick = {})
-                        BouncySmallFab(isClicked = isMainFabClicked.value, onClick = {})
+                        BouncySmallFab(
+                            isClicked = isMainFabClicked.value,
+                            painter = painterResource(R.drawable.ic_golive),
+                            onClick = {})
+                        BouncySmallFab(
+                            isClicked = isMainFabClicked.value,
+                            painter = painterResource(R.drawable.ic_spaces),
+                            onClick = {})
+                        BouncySmallFab(
+                            isClicked = isMainFabClicked.value,
+                            painter = painterResource(R.drawable.ic_photos),
+                            onClick = {})
                         BouncyLargeFab(
                             onClick = {
                                 isMainFabClicked.value = !isMainFabClicked.value
@@ -327,7 +340,7 @@ fun BouncyLargeFab(onClick: () -> Unit, isIconChange: Boolean) {
     )
 
     val animateWingIcon = animateFloatAsState(
-        targetValue = if (isIconChange) 30f else -50f,
+        targetValue = if (isIconChange) 0f else -80f,
         animationSpec = rotateSpec
     )
 
@@ -358,7 +371,7 @@ fun BouncyLargeFab(onClick: () -> Unit, isIconChange: Boolean) {
             onClick()
         },
         shape = CircleShape,
-        containerColor = Color(0xFF1DA1F2),
+        containerColor = AppPrimaryColor,
         modifier = Modifier
             .graphicsLayer(
                 scaleX = scale.value,
@@ -372,10 +385,6 @@ fun BouncyLargeFab(onClick: () -> Unit, isIconChange: Boolean) {
             tint = Color.White,
             modifier = Modifier
                 .size(25.dp)
-                .graphicsLayer(
-                    scaleX = scale.value,
-                    scaleY = scale.value
-                )
                 .rotate(animateIcon.value)
         )
 
@@ -383,7 +392,7 @@ fun BouncyLargeFab(onClick: () -> Unit, isIconChange: Boolean) {
 }
 
 @Composable
-fun BouncySmallFab(isClicked: Boolean, onClick: () -> Unit) {
+fun BouncySmallFab(isClicked: Boolean, painter: Painter, onClick: () -> Unit) {
     val scale by animateFloatAsState(
         targetValue = if (isClicked) 1f else 0f,
         animationSpec = tween(
@@ -396,7 +405,7 @@ fun BouncySmallFab(isClicked: Boolean, onClick: () -> Unit) {
     FloatingActionButton(
         onClick = { onClick() },
         shape = CircleShape,
-        containerColor = Color(0xFF1DA1F2),
+        containerColor = Color.White,
         modifier = Modifier
             .graphicsLayer(
                 scaleX = scale,
@@ -406,9 +415,9 @@ fun BouncySmallFab(isClicked: Boolean, onClick: () -> Unit) {
             .size(40.dp)
     ) {
         Icon(
-            painter = painterResource(R.drawable.dark),
+            painter = painter,
             contentDescription = "Add",
-            tint = Color.White,
+            tint = AppPrimaryColor,
             modifier = Modifier
                 .size(20.dp)
                 .graphicsLayer(
