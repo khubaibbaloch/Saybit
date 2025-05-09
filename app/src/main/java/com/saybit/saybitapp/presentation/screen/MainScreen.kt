@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -77,9 +78,12 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.saybit.saybitapp.presentation.components.BottomAppBar
+import com.saybit.saybitapp.presentation.components.BouncyLargeFab
+import com.saybit.saybitapp.presentation.components.BouncySmallFab
 import com.saybit.saybitapp.presentation.components.CustomMainScreenTopBar
 import com.saybit.saybitapp.presentation.components.DrawerContentUi
 import com.saybit.saybitapp.presentation.components.DrawerItem
+import com.saybit.saybitapp.presentation.components.FABSection
 import com.saybit.saybitapp.presentation.navhost.RootNavHost
 import com.saybit.saybitapp.presentation.navhost.ScreenRoute
 import com.saybit.saybitapp.ui.theme.AppPrimaryColor
@@ -105,6 +109,16 @@ fun MainScreen() {
 
     val isMainFabClicked = remember { mutableStateOf(false) }
 
+
+    val listState = rememberLazyListState()
+    val isScrollingDown = remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
+        }
+    }
+    val showBars by remember { derivedStateOf { !isScrollingDown.value } }
+
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = true,
@@ -120,14 +134,17 @@ fun MainScreen() {
         Scaffold(
             topBar = {
                 when (currentRoute) {
-                    ScreenRoute.HomeScreen.route -> CustomMainScreenTopBar(onProfileClick = {
-                        scope.launch {
-                            drawerState.apply {
-                                if (isClosed) open() else close()
-                            }
+                    ScreenRoute.HomeScreen.route -> {
+                        if (showBars) {
+                            CustomMainScreenTopBar(onProfileClick = {
+                                scope.launch {
+                                    drawerState.apply {
+                                        if (isClosed) open() else close()
+                                    }
+                                }
+                            })
                         }
-                    })
-
+                    }
                     ScreenRoute.SearchScreen.route -> CustomMainScreenTopBar(onProfileClick = {
                         scope.launch {
                             drawerState.apply {
@@ -140,176 +157,18 @@ fun MainScreen() {
                 }
             },
             bottomBar = {
-                BottomAppBar(
-                    selectedIndex = selectedIndex,
-                    navController = navController
-                )
-            },
-            floatingActionButton = {
-                Row(
-                    modifier = Modifier
-                        .height(200.dp)
-                    // .background(Color.Red)
-
-                ) {
-
-                    if (isMainFabClicked.value) {
-                        Column(
-                            modifier = Modifier.height(190.dp),
-                            verticalArrangement = Arrangement.SpaceAround,
-                            horizontalAlignment = Alignment.End
-                        ) {
-                            Text("Go Live", color = Color.White)
-                            Text("Spaces", color = Color.White)
-                            Text("Photos", color = Color.White)
-                            Text("Post", color = Color.White)
-
-
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-                    Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        BouncySmallFab(
-                            isClicked = isMainFabClicked.value,
-                            painter = painterResource(R.drawable.ic_golive),
-                            onClick = {})
-                        BouncySmallFab(
-                            isClicked = isMainFabClicked.value,
-                            painter = painterResource(R.drawable.ic_spaces),
-                            onClick = {})
-                        BouncySmallFab(
-                            isClicked = isMainFabClicked.value,
-                            painter = painterResource(R.drawable.ic_photos),
-                            onClick = {})
-                        BouncyLargeFab(
-                            onClick = {
-                                isMainFabClicked.value = !isMainFabClicked.value
-                            },
-                            isIconChange = isMainFabClicked.value
-                        )
-//                        FloatingActionButton(
-//                            onClick = {},
-//                            shape = CircleShape,
-//                            containerColor = Color(0xFF1DA1F2),
-//                            modifier = Modifier.size(40.dp)
-//                        ) {
-//
-//                            Icon(
-//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
-//                                contentDescription = "Add",
-//                                tint = Color.White,
-//                                modifier = Modifier.size(20.dp)
-//                            )
-//                        }
-//                        FloatingActionButton(
-//                            onClick = {},
-//                            shape = CircleShape,
-//                            containerColor = Color(0xFF1DA1F2),
-//                            modifier = Modifier.size(55.dp)
-//                        ) {
-//
-//                            Icon(
-//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
-//                                contentDescription = "Add",
-//                                tint = Color.White,
-//                                modifier = Modifier.size(20.dp)
-//                            )
-//                        }
-
-
-                    }
-//                    Row() {
-//                        Text("Go Live", color = Color.White)
-//
-//                        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-//
-//                        FloatingActionButton(
-//                            onClick = {},
-//                            shape = CircleShape,
-//                            containerColor = Color(0xFF1DA1F2),
-//                            modifier = Modifier.size(40.dp)
-//                        ) {
-//
-//                            Icon(
-//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
-//                                contentDescription = "Add",
-//                                tint = Color.White,
-//                                modifier = Modifier.size(20.dp)
-//                            )
-//                        }
-//
-//                    }
-//
-//                    Spacer(modifier = Modifier.padding(top = 16.dp))
-//                    Row {
-//                        Text("Go Live", color = Color.White)
-//
-//                        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-//
-//
-//                        FloatingActionButton(
-//                            onClick = {},
-//                            shape = CircleShape,
-//                            modifier = Modifier.size(40.dp),
-//                            containerColor = Color(0xFF1DA1F2)
-//                        ) {
-//                            Icon(
-//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
-//                                contentDescription = "Add",
-//                                tint = Color.White,
-//                                modifier = Modifier.size(20.dp)
-//                            )
-//                        }
-//                    }
-//                    Spacer(modifier = Modifier.padding(top = 16.dp))
-//                    Row {
-//                        Text("Go Live", color = Color.White)
-//
-//                        Spacer(modifier = Modifier.padding(horizontal = 16.dp))
-//
-//
-//                        FloatingActionButton(
-//                            onClick = {},
-//                            shape = CircleShape,
-//                            modifier = Modifier.size(40.dp),
-//                            containerColor = Color(0xFF1DA1F2)
-//                        ) {
-//                            Icon(
-//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
-//                                contentDescription = "Add",
-//                                tint = Color.White,
-//                                modifier = Modifier.size(20.dp)
-//                            )
-//                        }
-//                    }
-//                    Spacer(modifier = Modifier.padding(top = 16.dp))
-//                    Row {
-//                        Text("Go Live", color = Color.White)
-//
-//                        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-//
-//
-//                        FloatingActionButton(
-//                            onClick = {},
-//                            shape = CircleShape,
-//                            modifier = Modifier.size(55.dp),
-//                            containerColor = Color(0xFF1DA1F2)
-//                        ) {
-//                            Icon(
-//                                painter = painterResource(id = R.drawable.dark),  // Use your icon here
-//                                contentDescription = "Add",
-//                                tint = Color.White,
-//                                modifier = Modifier.size(20.dp)
-//                            )
-//                        }
-//                    }
+                if (showBars){
+                    BottomAppBar(
+                        selectedIndex = selectedIndex,
+                        navController = navController
+                    )
                 }
 
+            },
+            floatingActionButton = {
+                if (showBars){
+                    FABSection(isMainFabClicked)
+                }
             }
         ) { innerPadding ->
             Column(
@@ -319,7 +178,7 @@ fun MainScreen() {
                     .navigationBarsPadding()
                     .background(Color.Black)
             ) {
-                RootNavHost(navController)
+                RootNavHost(navController,listState)
             }
         }
     }
@@ -327,104 +186,3 @@ fun MainScreen() {
 
 }
 
-@Composable
-fun BouncyLargeFab(onClick: () -> Unit, isIconChange: Boolean) {
-    val scale = remember { Animatable(1f) }
-    val icon =
-        if (isIconChange) painterResource(R.drawable.ic_wing) else painterResource(R.drawable.ic_add)
-    val scope = rememberCoroutineScope()
-
-    val rotateSpec = tween<Float>(
-        durationMillis = 200,
-        easing = LinearEasing
-    )
-
-    val animateWingIcon = animateFloatAsState(
-        targetValue = if (isIconChange) 0f else -80f,
-        animationSpec = rotateSpec
-    )
-
-    val animateAddIcon = animateFloatAsState(
-        targetValue = if (isIconChange) 90f else 0f,
-        animationSpec = rotateSpec
-    )
-
-    val animateIcon = if (isIconChange) animateWingIcon else animateAddIcon
-    FloatingActionButton(
-        onClick = {
-            scope.launch {
-                scale.animateTo(
-                    targetValue = 1.1f,
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessMedium
-                    )
-                )
-                scale.animateTo(
-                    targetValue = 1f,
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessMedium
-                    )
-                )
-            }
-            onClick()
-        },
-        shape = CircleShape,
-        containerColor = AppPrimaryColor,
-        modifier = Modifier
-            .graphicsLayer(
-                scaleX = scale.value,
-                scaleY = scale.value
-            )
-            .size(55.dp)
-    ) {
-        Icon(
-            painter = icon,
-            contentDescription = "Add",
-            tint = Color.White,
-            modifier = Modifier
-                .size(25.dp)
-                .rotate(animateIcon.value)
-        )
-
-    }
-}
-
-@Composable
-fun BouncySmallFab(isClicked: Boolean, painter: Painter, onClick: () -> Unit) {
-    val scale by animateFloatAsState(
-        targetValue = if (isClicked) 1f else 0f,
-        animationSpec = tween(
-            durationMillis = 100,
-            easing = EaseInOut
-        ), label = ""
-    )
-
-
-    FloatingActionButton(
-        onClick = { onClick() },
-        shape = CircleShape,
-        containerColor = Color.White,
-        modifier = Modifier
-            .graphicsLayer(
-                scaleX = scale,
-                scaleY = scale,
-                transformOrigin = TransformOrigin(0.5f, 0.5f)
-            )
-            .size(40.dp)
-    ) {
-        Icon(
-            painter = painter,
-            contentDescription = "Add",
-            tint = AppPrimaryColor,
-            modifier = Modifier
-                .size(20.dp)
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    transformOrigin = TransformOrigin(0.5f, 0.5f)
-                )
-        )
-    }
-}

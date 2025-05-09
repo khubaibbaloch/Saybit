@@ -1,5 +1,6 @@
 package com.saybit.saybitapp.presentation.navhost
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,13 +13,13 @@ import com.saybit.saybitapp.presentation.screen.bottomnavscreen.NotificationScre
 import com.saybit.saybitapp.presentation.screen.bottomnavscreen.SearchScreen
 
 @Composable
-fun RootNavHost(navHostController: NavHostController) {
+fun RootNavHost(navHostController: NavHostController,listState: LazyListState) {
     NavHost(
         navController = navHostController,
         startDestination = ScreenRoute.HomeScreen.route
     ) {
         composable(ScreenRoute.HomeScreen.route) {
-            HomeScreen()
+            HomeScreen(listState = listState)
         }
         composable(ScreenRoute.SearchScreen.route) {
             SearchScreen()
