@@ -15,8 +15,14 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +37,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -89,6 +96,8 @@ import com.saybit.saybitapp.presentation.navhost.ScreenRoute
 import com.saybit.saybitapp.ui.theme.AppPrimaryColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,17 +118,12 @@ fun MainScreen() {
 
     val isMainFabClicked = remember { mutableStateOf(false) }
 
-
     val listState = rememberLazyListState()
-    val isScrollingDown = remember {
-        derivedStateOf {
-            listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
-        }
-    }
-    val showBars by remember { derivedStateOf { !isScrollingDown.value } }
+    val isScrollingUp by listState.isScrollingUp()
 
 
     ModalNavigationDrawer(
+        modifier = Modifier.statusBarsPadding(),
         drawerState = drawerState,
         gesturesEnabled = true,
         drawerContent = {
@@ -135,16 +139,15 @@ fun MainScreen() {
             topBar = {
                 when (currentRoute) {
                     ScreenRoute.HomeScreen.route -> {
-                        if (showBars) {
-                            CustomMainScreenTopBar(onProfileClick = {
-                                scope.launch {
-                                    drawerState.apply {
-                                        if (isClosed) open() else close()
-                                    }
+                        CustomMainScreenTopBar(onProfileClick = {
+                            scope.launch {
+                                drawerState.apply {
+                                    if (isClosed) open() else close()
                                 }
-                            })
-                        }
+                            }
+                        })
                     }
+
                     ScreenRoute.SearchScreen.route -> CustomMainScreenTopBar(onProfileClick = {
                         scope.launch {
                             drawerState.apply {
@@ -157,18 +160,13 @@ fun MainScreen() {
                 }
             },
             bottomBar = {
-                if (showBars){
-                    BottomAppBar(
-                        selectedIndex = selectedIndex,
-                        navController = navController
-                    )
-                }
-
+                BottomAppBar(
+                    selectedIndex = selectedIndex,
+                    navController = navController
+                )
             },
             floatingActionButton = {
-                if (showBars){
-                    FABSection(isMainFabClicked)
-                }
+                FABSection(isMainFabClicked)
             }
         ) { innerPadding ->
             Column(
@@ -178,11 +176,26 @@ fun MainScreen() {
                     .navigationBarsPadding()
                     .background(Color.Black)
             ) {
-                RootNavHost(navController,listState)
+                RootNavHost(navController, listState)
             }
         }
     }
-
-
 }
 
+@Composable
+fun LazyListState.isScrollingUp(): State<Boolean> {
+    return produceState(initialValue = true) {
+        var lastIndex = 0
+        var lastScroll = Int.MAX_VALUE
+        snapshotFlow {
+            firstVisibleItemIndex to firstVisibleItemScrollOffset
+        }.collect { (currentIndex, currentScroll) ->
+            if (currentIndex != lastIndex || currentScroll != lastScroll) {
+                value = currentIndex < lastIndex ||
+                        (currentIndex == lastIndex && currentScroll < lastScroll)
+                lastIndex = currentIndex
+                lastScroll = currentScroll
+            }
+        }
+    }
+}
