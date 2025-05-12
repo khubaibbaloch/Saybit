@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.saybit.saybitapp.presentation.screen.TweetDetailScreen
 import com.saybit.saybitapp.presentation.screen.bottomnavscreen.AiScreen
 import com.saybit.saybitapp.presentation.screen.bottomnavscreen.CommunitiesScreen
 import com.saybit.saybitapp.presentation.screen.bottomnavscreen.HomeScreen
@@ -36,5 +37,9 @@ fun RootNavHost(navHostController: NavHostController,listState: LazyListState) {
         composable(ScreenRoute.InboxScreen.route) {
             InboxScreen()
         }
+        composable(ScreenRoute.InboxScreen.route) {
+            TweetDetailScreen()
+        }
+
     }
 }

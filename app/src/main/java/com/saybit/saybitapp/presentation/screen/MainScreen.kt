@@ -25,7 +25,10 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -99,7 +102,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun MainScreen() {
 
@@ -123,7 +126,7 @@ fun MainScreen() {
 
 
     ModalNavigationDrawer(
-        modifier = Modifier.statusBarsPadding(),
+       // modifier = Modifier.statusBarsPadding(),
         drawerState = drawerState,
         gesturesEnabled = true,
         drawerContent = {
@@ -169,14 +172,19 @@ fun MainScreen() {
                 FABSection(isMainFabClicked)
             }
         ) { innerPadding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .navigationBarsPadding()
-                    .background(Color.Black)
             ) {
-                RootNavHost(navController, listState)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .navigationBarsPadding()
+                        .background(Color.Black)
+                ) {
+                    RootNavHost(navController, listState)
+                }
             }
         }
     }

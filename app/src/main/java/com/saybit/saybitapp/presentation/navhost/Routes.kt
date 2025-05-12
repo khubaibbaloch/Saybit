@@ -8,4 +8,5 @@ sealed class ScreenRoute(val route: String) {
     data object CommunitiesScreen : ScreenRoute(route = "CommunitiesScreenRoute")
     data object NotificationScreen : ScreenRoute(route = "NotificationScreenRoute")
     data object InboxScreen : ScreenRoute(route = "InboxScreenRoute")
+    data object TweetDetailScreen : ScreenRoute(route = "TweetDetailScreenRoute")
 }
