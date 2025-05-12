@@ -17,7 +17,7 @@ import com.saybit.saybitapp.presentation.screen.bottomnavscreen.SearchScreen
 fun RootNavHost(navHostController: NavHostController,listState: LazyListState) {
     NavHost(
         navController = navHostController,
-        startDestination = ScreenRoute.HomeScreen.route
+        startDestination = ScreenRoute.TweetDetailScreen.route
     ) {
         composable(ScreenRoute.HomeScreen.route) {
             HomeScreen(listState = listState)
@@ -37,7 +37,7 @@ fun RootNavHost(navHostController: NavHostController,listState: LazyListState) {
         composable(ScreenRoute.InboxScreen.route) {
             InboxScreen()
         }
-        composable(ScreenRoute.InboxScreen.route) {
+        composable(ScreenRoute.TweetDetailScreen.route) {
             TweetDetailScreen()
         }
 
