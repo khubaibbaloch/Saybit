@@ -1,4 +1,4 @@
-package com.saybit.saybitapp.presentation.components
+package com.saybit.saybitapp.presentation.components.fab
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

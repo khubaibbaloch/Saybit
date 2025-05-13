@@ -1,4 +1,4 @@
-package com.saybit.saybitapp.presentation.components
+package com.saybit.saybitapp.presentation.components.topbar
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons

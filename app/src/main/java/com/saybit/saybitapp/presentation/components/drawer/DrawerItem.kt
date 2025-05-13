@@ -1,4 +1,4 @@
-package com.saybit.saybitapp.presentation.components
+package com.saybit.saybitapp.presentation.components.drawer
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -7,11 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.saybit.saybitapp.R
 
 @Composable
 fun  DrawerItem(label: String, icon: Painter, iconSize:Dp,onClick:()-> Unit){

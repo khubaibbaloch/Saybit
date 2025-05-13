@@ -1,4 +1,4 @@
-package com.saybit.saybitapp.presentation.components
+package com.saybit.saybitapp.presentation.components.fab
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
