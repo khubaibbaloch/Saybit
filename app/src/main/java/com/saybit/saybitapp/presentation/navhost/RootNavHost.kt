@@ -38,7 +38,7 @@ fun RootNavHost(navHostController: NavHostController,listState: LazyListState) {
             InboxScreen()
         }
         composable(ScreenRoute.TweetDetailScreen.route) {
-            TweetDetailScreen()
+            TweetDetailScreen(navController =navHostController)
         }
 
     }
